@@ -1,6 +1,7 @@
 package com.example.habrtest;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -8,11 +9,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-
 import java.time.Duration;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ManePageTest {
@@ -34,32 +32,24 @@ public class ManePageTest {
         driver.quit();
     }
 
-
     @Test
     public void supportTest() {
-
-        WebElement userIcon = driver.findElement(By.xpath("//*[contains(text(), 'Войти')]"));
+        WebElement userIcon = driver.findElement(By.xpath("//a[contains(text(), 'Войти')]"));
         userIcon.click();
-
-        WebElement supportLink = driver.findElement(By.xpath("//*[contains(text(), 'Обратная связь')]"));
+        WebElement supportLink = driver.findElement(By.xpath("//a[contains(text(), 'Обратная связь')]"));
         supportLink.click();
-
-        assertTrue(driver.findElement(By.xpath("//*[contains(text(), 'Электронная почта')]")).isDisplayed(), "Поле 'Электронная почта' на странице 'Обратная связь' не найдено");
+        assertTrue(driver.findElement(By.xpath("//label[contains(text(), 'Электронная почта')]")).isDisplayed(),
+                "Поле 'Электронная почта' на странице 'Обратная связь' не найдено");
     }
-
 
     @Test
     public void newsTest() {
-
-       WebElement flowLink = driver.findElement(By.xpath("//*[contains(text(), 'Все потоки')]"));
-       flowLink.click();
-
-       List<WebElement> newsLinks = driver.findElements(By.xpath("//a[contains(text(), 'Новости')]"));
-       if (newsLinks.size() > 0) {
-
-           WebElement newsLink = driver.findElement(By.xpath("//a[contains(text(), 'Новости')]"));
-           newsLink.click();
-       }
-       else System.out.println("Раздела 'Новости' на странице нет");
+        WebElement flowLink = driver.findElement(By.xpath("//a[contains(text(), 'Все потоки')]"));
+        flowLink.click();
+        By newsXpath = By.xpath("//a[contains(text(), 'Новости')]");
+        List<WebElement> newsLinks = driver.findElements(newsXpath);
+        WebElement newsLink = driver.findElement(newsXpath);
+        Assertions.assertFalse(newsLinks.isEmpty(), "На странице нет ссылки про новости");
+        Assertions.assertTrue(newsLinks.getFirst().isDisplayed(), "Ссылка про новости");
     }
 }
